@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">myTab</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_add">Add</string>
+    <string name="menu_add_tab">Add Tab</string>
+    <string name="menu_add_exp">Add Expense</string>
+    <string name="menu_schedule">Schedule Task</string>
+    <string name="menu_calender">Calender</string>
+    <string name="list_amount">$500</string>
+    <string name="drawer_open">O</string>
+    <string name="drawer_close">C</string>
+    
+
+</resources>
