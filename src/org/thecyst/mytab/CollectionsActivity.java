@@ -71,6 +71,8 @@ public class CollectionsActivity extends FragmentActivity implements OnClickList
 				frag.setTableData();
 				frag.insertInto(amountToAdd, noteToAdd);
 				frag.updateView();
+				editTextAmount.setText(null);
+				editTextNote.setText(null);
 			}
 		} else if(view.getId() == R.id.reset_input) {
 			editTextAmount.setText(null);

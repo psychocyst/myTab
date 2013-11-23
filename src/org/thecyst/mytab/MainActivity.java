@@ -231,13 +231,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         }
     }
 	
-	@Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        drawerOpenLeft = drawerLayout.isDrawerOpen(tabListLeft);
-        drawerOpenRight = drawerLayout.isDrawerOpen(tabListRight);
-        return super.onPrepareOptionsMenu(menu);
-    }
-	
 	private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -261,6 +254,19 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			CollectionPagerAdapter.setDrawerAdapter(rightDrawerAdapter);
 			startActivity(intent);
 		}
+    }
+	
+	@Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        drawerOpenLeft = drawerLayout.isDrawerOpen(tabListLeft);
+        drawerOpenRight = drawerLayout.isDrawerOpen(tabListRight);
+        if(drawerOpenLeft|drawerOpenRight) {
+        	getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        	menu.clear();
+        } else {
+        	getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 
 	@Override
