@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +16,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -64,15 +67,28 @@ public class CollectionsActivity extends FragmentActivity implements OnClickList
 	@Override
 	public void onClick(View view) {
 		if(view.getId() == R.id.add_record) {
-			if(amountToAdd != null && noteToAdd != null) {
+			try {
 				amountToAdd = Integer.parseInt(editTextAmount.getText().toString());
 		        noteToAdd = editTextNote.getText().toString();
-				ObjectFragment frag = (ObjectFragment) collectionPagerAdapter.getItem(viewPager.getCurrentItem());
+		        if(noteToAdd.length()==0)
+		        	noteToAdd = "misc";
+		        ObjectFragment frag = (ObjectFragment) collectionPagerAdapter.getItem(viewPager.getCurrentItem());
 				frag.setTableData();
 				frag.insertInto(amountToAdd, noteToAdd);
 				frag.updateView();
 				editTextAmount.setText(null);
 				editTextNote.setText(null);
+			} catch(Exception exception) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setMessage("Enter a valid amount")
+				       .setCancelable(false)
+				       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+				           public void onClick(DialogInterface dialog, int id) {
+				                //do things
+				           }
+				       });
+				AlertDialog alert = builder.create();
+				alert.show();
 			}
 		} else if(view.getId() == R.id.reset_input) {
 			editTextAmount.setText(null);
@@ -205,6 +221,7 @@ public class CollectionsActivity extends FragmentActivity implements OnClickList
         	holder.record_name.setText(tableName);
     		holder.record_sum.setText(amount.toString());
     		holder.recent_records.setAdapter(adapter);
+    		rootView.requestFocus();
     	}
 	}
 

@@ -150,6 +150,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		rightDrawerAdapter.notifyDataSetChanged();
 	}
 	
+	public void reloadLeftList() {
+		leftTabs.clear();
+		leftTabs= sumLeft.loadList();
+		leftDrawerAdapter.resetDataStore(leftTabs);
+		leftDrawerAdapter.notifyDataSetChanged();
+	}
+	
 	@Override
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
     }
@@ -332,6 +339,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 						String tableName = name.getText().toString();
 						Ledger ledger = new Ledger(context, tableName);
 						sumLeft.addRow(tableName);
+						reloadLeftList();
 					}
 				})
 				.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
