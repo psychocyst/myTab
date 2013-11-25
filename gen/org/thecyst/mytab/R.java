@@ -85,6 +85,9 @@ public final class R {
         public static final int menu_add_tab=0x7f050004;
         public static final int menu_calender=0x7f050007;
         public static final int menu_schedule=0x7f050006;
+        public static final int my_green=0x7f05000c;
+        public static final int my_grey=0x7f05000d;
+        public static final int my_red=0x7f05000b;
     }
     public static final class style {
         /** 

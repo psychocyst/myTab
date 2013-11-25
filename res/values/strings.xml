@@ -12,6 +12,9 @@
     <string name="list_amount">$500</string>
     <string name="drawer_open">O</string>
     <string name="drawer_close">C</string>
+    <string name="my_red">#CC0000</string>
+    <string name="my_green">#00CC00</string>
+    <string name="my_grey">#0C0C0C</string>
     
 
 </resources>
