@@ -230,5 +230,11 @@ public class CollectionsActivity extends FragmentActivity implements OnClickList
 		TextView record_sum;
 		ListView recent_records;
 	}
+	
+	@Override
+	public void finish() {
+		setResult(RESULT_OK);
+		super.finish();
+	}
 
 }

@@ -39,7 +39,7 @@ import android.widget.ListView;
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 	
 	private static final String AKS = "AKS";
-	
+	private final int EXPECTED_RESULT = 1;
 	Context context;
 	
 	Summation sumLeft;
@@ -65,13 +65,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	
 	AppSectionsPagerAdapter appSectionsPagerAdapter;
 	ViewPager viewPager;
-	
-	Bundle savedInstanceStateM;
-	
+		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		savedInstanceStateM = savedInstanceState;
 		setContentView(R.layout.activity_main);
 		final ActionBar actionBar;
 		context = this;
@@ -252,14 +249,14 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			Intent intent = new Intent(context, CollectionsActivity.class);
 			intent.putExtra("position", position);
 			CollectionPagerAdapter.setDrawerAdapter(leftDrawerAdapter);
-			startActivity(intent);
+			startActivityForResult(intent, EXPECTED_RESULT);
 		} else if(drawerOpenRight) {
 			tabListRight.setItemChecked(position, true);
 			drawerLayout.closeDrawer(tabListRight);
 			Intent intent = new Intent(context, CollectionsActivity.class);
 			intent.putExtra("position", position);
 			CollectionPagerAdapter.setDrawerAdapter(rightDrawerAdapter);
-			startActivity(intent);
+			startActivityForResult(intent, EXPECTED_RESULT);
 		}
     }
 	
@@ -311,6 +308,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 					public void onClick(DialogInterface dialog,int id) {
 						String tableName = name.getText().toString();
 						Ledger ledger = new Ledger(context, tableName);
+						ledger.closeDB();
 						sumRight.addRow(tableName);
 						reloadRightList();
 					}
@@ -338,6 +336,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 					public void onClick(DialogInterface dialog,int id) {
 						String tableName = name.getText().toString();
 						Ledger ledger = new Ledger(context, tableName);
+						ledger.closeDB();
 						sumLeft.addRow(tableName);
 						reloadLeftList();
 					}
@@ -352,5 +351,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     	}
 		return true;
     }
+    
+    @Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == RESULT_OK && requestCode == EXPECTED_RESULT) {
+			reloadRightList();
+			reloadLeftList();
+		}
+	}
 
 }

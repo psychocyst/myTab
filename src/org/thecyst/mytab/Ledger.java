@@ -171,4 +171,8 @@ public class Ledger {
     	return TABLE_NAME;
     }
     
+    public void closeDB() {
+    	db.close();
+    }
+    
 }
