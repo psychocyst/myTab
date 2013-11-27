@@ -77,4 +77,8 @@ public class Wallet {
 		
 	}
     
+    public void closeDB() {
+    	db.close();
+    }
+    
 }

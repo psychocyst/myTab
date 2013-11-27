@@ -106,5 +106,9 @@ public class Summation {
 			e.printStackTrace();
 		}
 	}
+    
+    public void closeDB() {
+    	db.close();
+    }
         
 }

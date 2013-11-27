@@ -18,6 +18,7 @@ public class Ledger {
 	private final int DB_VERSION = 1;
 	
 	private String TABLE_NAME = "wallet";
+	private String TABLE_TYPE = "tab";
 	private static final String KEY_ID = "id";
 	private static final String KEY_AMOUNT = "amount";
 	private static final String KEY_NAME = "name";
@@ -26,10 +27,11 @@ public class Ledger {
     
     private static final String AKS = "AKS";
     
-    public Ledger(Context context, String name)
+    public Ledger(Context context, String name, String type)
 	{
 		this.context = context;
 		TABLE_NAME = name;
+		TABLE_TYPE = type;
  
 		CustomSQLiteOpenHelper helper = new CustomSQLiteOpenHelper(this.context);
 		this.db = helper.getWritableDatabase();
@@ -91,8 +93,8 @@ public class Ledger {
 						" ORDER BY " + KEY_ID + 
 						" DESC LIMIT 1; " +
 						
-						"UPDATE summationleft " +
-						"SET amount =( " +
+						"UPDATE " + TABLE_TYPE +
+						" SET amount =( " +
 						"SELECT sum( " + KEY_AMOUNT + " ) " +
 						"FROM " + TABLE_NAME + " ) " +
 						"WHERE " + KEY_NAME + " = '" + TABLE_NAME + "'; " +

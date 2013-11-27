@@ -51,7 +51,7 @@ public class CollectionsActivity extends FragmentActivity implements OnClickList
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         
-        collectionPagerAdapter = new CollectionPagerAdapter(getSupportFragmentManager());
+        collectionPagerAdapter = new CollectionPagerAdapter(getSupportFragmentManager(), bundle.getString("type"));
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(collectionPagerAdapter);
         viewPager.setCurrentItem(bundle.getInt("position"));
@@ -123,10 +123,12 @@ public class CollectionsActivity extends FragmentActivity implements OnClickList
 	public static class CollectionPagerAdapter extends FragmentStatePagerAdapter {
 		
 		private static ListItemsAdapter drawerAdapter;
+		private String tabType = "type";
     	
-    	public CollectionPagerAdapter(FragmentManager fm) {
+    	public CollectionPagerAdapter(FragmentManager fm, String type) {
             super(fm);
             views = new HashMap<Integer, View>();
+            tabType = type;
         }
     	
     	public static ListItemsAdapter getDrawerAdapter() {
@@ -154,6 +156,7 @@ public class CollectionsActivity extends FragmentActivity implements OnClickList
 			Bundle args = new Bundle();
 			args.putInt("position", i);
             args.putString("itemName", itemName);
+            args.putString("type", tabType);
             fragment.setArguments(args);
             return fragment;
 		}
@@ -164,10 +167,10 @@ public class CollectionsActivity extends FragmentActivity implements OnClickList
 		Ledger ledger;
         Integer amount = 0;
         String tableName = "misc";
+        String tableType = "type";
         Integer position = 0;
                     
 		ArrayList<ArrayList<Object>> recentRecords = new ArrayList<ArrayList<Object>>();
-//        RecentItemsAdapterLeft adapter;
         ListItemsAdapter adapter;
         ListView listView;
         View rootView;
@@ -196,7 +199,8 @@ public class CollectionsActivity extends FragmentActivity implements OnClickList
         	Bundle args = getArguments();
         	position = args.getInt("position");
         	tableName = args.getString("itemName");
-        	ledger = new Ledger(context, tableName);
+        	tableType = args.getString("type");
+        	ledger = new Ledger(context, tableName, tableType);
         	amount = ledger.getAmount();
         	recentRecords = ledger.loadLastThree();
             adapter = new ListItemsAdapter(context, recentRecords);
@@ -223,6 +227,16 @@ public class CollectionsActivity extends FragmentActivity implements OnClickList
     		holder.recent_records.setAdapter(adapter);
     		rootView.requestFocus();
     	}
+        
+        @Override
+        public void onStop () {
+        	try{
+        		ledger.closeDB();
+        	} catch(Exception exception) {
+        		Log.i(AKS, "SQL exception");
+        	}
+        	super.onStop();
+        }
 	}
 
 	static class ViewHolder {

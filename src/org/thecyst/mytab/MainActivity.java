@@ -3,19 +3,15 @@ package org.thecyst.mytab;
 import java.util.ArrayList;
 
 import org.thecyst.mytab.CollectionsActivity.CollectionPagerAdapter;
-import org.thecyst.mytab.R.menu;
 
 import android.os.Bundle;
 import android.app.ActionBar;
-import android.app.ActionBar.TabListener;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.DataSetObserver;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -72,8 +68,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		setContentView(R.layout.activity_main);
 		final ActionBar actionBar;
 		context = this;
-		sumLeft = new Summation(context, "summationleft");
-		sumRight = new Summation(context, "summatioright");
+		sumLeft = new Summation(context, "iou");
+		sumRight = new Summation(context, "expense");
 		wallet = new Wallet(context);
 		
 		leftTabs.clear();
@@ -102,7 +98,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
         	public void onDrawerClosed(View view) {
         		actionBar.setTitle("myTab");
-        		
         		invalidateOptionsMenu();
             }
         	
@@ -248,6 +243,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			drawerLayout.closeDrawer(tabListLeft);
 			Intent intent = new Intent(context, CollectionsActivity.class);
 			intent.putExtra("position", position);
+			intent.putExtra("type", "iou");
 			CollectionPagerAdapter.setDrawerAdapter(leftDrawerAdapter);
 			startActivityForResult(intent, EXPECTED_RESULT);
 		} else if(drawerOpenRight) {
@@ -255,6 +251,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			drawerLayout.closeDrawer(tabListRight);
 			Intent intent = new Intent(context, CollectionsActivity.class);
 			intent.putExtra("position", position);
+			intent.putExtra("type", "expense");
 			CollectionPagerAdapter.setDrawerAdapter(rightDrawerAdapter);
 			startActivityForResult(intent, EXPECTED_RESULT);
 		}
@@ -295,7 +292,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     public boolean onOptionsItemSelected (MenuItem menuItem){
     	if(menuItem.getItemId() == R.id.Add_Exp){
     		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-			alertDialogBuilder.setTitle("Add New IOU Tab");
+			alertDialogBuilder.setTitle("Add New Expense Tab");
 			alertDialogBuilder.setMessage("Tab Name");
 			final EditText name = new EditText(context);
 			InputFilter[] FilterArray = new InputFilter[1];
@@ -307,7 +304,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 				.setPositiveButton("Add",new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog,int id) {
 						String tableName = name.getText().toString();
-						Ledger ledger = new Ledger(context, tableName);
+						Ledger ledger = new Ledger(context, tableName, "expense");
 						ledger.closeDB();
 						sumRight.addRow(tableName);
 						reloadRightList();
@@ -335,7 +332,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 				.setPositiveButton("Add",new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog,int id) {
 						String tableName = name.getText().toString();
-						Ledger ledger = new Ledger(context, tableName);
+						Ledger ledger = new Ledger(context, tableName, "iou");
 						ledger.closeDB();
 						sumLeft.addRow(tableName);
 						reloadLeftList();
@@ -359,5 +356,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			reloadLeftList();
 		}
 	}
+    
+    @Override
+    public void finish() {
+    	sumLeft.closeDB();
+    	sumRight.closeDB();
+    	wallet.closeDB();
+    	super.finish();
+    }
 
 }
