@@ -24,6 +24,7 @@ public class Ledger {
 	private static final String KEY_NAME = "name";
 	private static final String KEY_NOTE = "note";
     private static final String KEY_TIME = "time";
+    private static final String KEY_TYPE = "type";
     
     private static final String AKS = "AKS";
     
@@ -54,7 +55,8 @@ public class Ledger {
 					KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
 					KEY_AMOUNT + " INTEGER NOT NULL, " +
 					KEY_NOTE + " TEXT DEFAULT ( 'misc' ), " +
-					KEY_TIME + " DATETIME DEFAULT ( datetime( 'now' ) ) " +
+					KEY_TIME + " DATETIME DEFAULT ( datetime( 'now' ) ), " +
+					KEY_TYPE + " TEXT DEFAULT ( 'tab' ) " +
 					");";
 			db.execSQL(newTableQueryString);
 		}
@@ -75,7 +77,8 @@ public class Ledger {
 					KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
 					KEY_AMOUNT + " INTEGER NOT NULL, " +
 					KEY_NOTE + " TEXT DEFAULT ( 'misc' ), " +
-					KEY_TIME + " DATETIME DEFAULT ( datetime( 'now' ) ) " +
+					KEY_TIME + " DATETIME DEFAULT ( datetime( 'now' ) ), " +
+					KEY_TYPE + " TEXT DEFAULT ( 'tab' ) " +
 					");";
 			db.execSQL(newTableQueryString);
 			
@@ -86,10 +89,11 @@ public class Ledger {
 					"BEGIN " +
 						"INSERT INTO wallet ( " +
 						KEY_AMOUNT + ", " + KEY_NAME + ", " +
-						KEY_NOTE + ", " + KEY_TIME + " ) " +
+						KEY_NOTE + ", " + KEY_TIME + ", " + KEY_TYPE + " ) " +
 						"SELECT " + KEY_AMOUNT + ", '" +
 						KEY_NAME + "', " + KEY_NOTE + ", " +
-						KEY_TIME + " FROM " + TABLE_NAME + 
+						KEY_TIME + ", '" +
+						TABLE_TYPE + "' " + " FROM " + TABLE_NAME + 
 						" ORDER BY " + KEY_ID + 
 						" DESC LIMIT 1; " +
 						

@@ -1,6 +1,10 @@
 package org.thecyst.mytab;
 
+import java.util.ArrayList;
+
 import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -19,6 +23,7 @@ public class Wallet {
 	private static final String KEY_NAME = "name";
     private static final String KEY_NOTE = "note";
     private static final String KEY_TIME = "time";
+    private static final String KEY_TYPE = "type";
     
     private static final String AKS = "AKS";
     
@@ -48,7 +53,8 @@ public class Wallet {
 					KEY_AMOUNT + " INTEGER NOT NULL, " +
 					KEY_NAME + " TEXT NOT NULL DEFAULT ( 'misc' ), " +
 					KEY_NOTE + " TEXT DEFAULT ( 'misc' ), " +
-					KEY_TIME + " DATETIME DEFAULT ( datetime( 'now' ) ) " +
+					KEY_TIME + " DATETIME DEFAULT ( datetime( 'now' ) ), " +
+					KEY_TYPE + " TEXT DEFAULT ( 'tab' ) " +
 					");";
 			db.execSQL(newTableQueryString);
 		}
@@ -70,7 +76,8 @@ public class Wallet {
 					KEY_AMOUNT + " INTEGER NOT NULL, " +
 					KEY_NAME + " TEXT NOT NULL DEFAULT ( 'misc' ), " +
 					KEY_NOTE + " TEXT DEFAULT ( 'misc' ), " +
-					KEY_TIME + " DATETIME DEFAULT ( datetime( 'now' ) ) " +
+					KEY_TIME + " DATETIME DEFAULT ( datetime( 'now' ) ), " +
+					KEY_TYPE + " TEXT DEFAULT ( 'tab' ) " +
 					");";
 			db.execSQL(newTableQueryString);
 		}
@@ -80,5 +87,117 @@ public class Wallet {
     public void closeDB() {
     	db.close();
     }
+    
+    public ArrayList<ArrayList<Object>> loadLastTen() {
+    	ArrayList<ArrayList<Object>> records = new ArrayList<ArrayList<Object>>();
+		Cursor cursor;
+		
+		try
+			{
+			String generateList = "SELECT " +
+					KEY_NOTE + ", " +
+					KEY_AMOUNT + " FROM " +
+					TABLE_NAME + " ORDER BY " +
+					KEY_ID + " DESC LIMIT 10;";
+			
+			cursor = db.rawQuery(generateList, null);
+			
+			cursor.moveToFirst();
+			if (!cursor.isAfterLast())
+			{
+				do
+				{
+					ArrayList<Object> dataList = new ArrayList<Object>();
+					dataList.add(cursor.getString(0));
+					dataList.add(cursor.getInt(1));
+					records.add(dataList);
+				}
+				while (cursor.moveToNext());
+			}
+				cursor.close();
+			}
+			catch (SQLException e) 
+			{
+				Log.e("DB ERROR", e.toString());
+				e.printStackTrace();
+			}
+		return records;
+	}
+    
+    public ArrayList<ArrayList<Object>> loadLastTenIOUs() {
+    	ArrayList<ArrayList<Object>> records = new ArrayList<ArrayList<Object>>();
+		Cursor cursor;
+		
+		try
+			{
+			String generateList = "SELECT " +
+					KEY_NOTE + ", " +
+					KEY_AMOUNT + " FROM " +
+					TABLE_NAME + " WHERE " +
+					KEY_TYPE + " = 'iou' " +
+					" ORDER BY " +
+					KEY_ID + " DESC LIMIT 10;";
+			
+			cursor = db.rawQuery(generateList, null);
+			
+			cursor.moveToFirst();
+			if (!cursor.isAfterLast())
+			{
+				do
+				{
+					ArrayList<Object> dataList = new ArrayList<Object>();
+					dataList.add(cursor.getString(0));
+					dataList.add(cursor.getInt(1));
+					records.add(dataList);
+				}
+				while (cursor.moveToNext());
+			}
+				cursor.close();
+			}
+			catch (SQLException e) 
+			{
+				Log.e("DB ERROR", e.toString());
+				e.printStackTrace();
+			}
+		return records;
+	}
+    
+    public ArrayList<ArrayList<Object>> loadLastTenEXPs() {
+    	ArrayList<ArrayList<Object>> records = new ArrayList<ArrayList<Object>>();
+		Cursor cursor;
+		
+		try
+			{
+			String generateList = "SELECT " +
+					KEY_NOTE + ", " +
+					KEY_AMOUNT + " FROM " +
+					TABLE_NAME + " WHERE " +
+					KEY_TYPE + " = 'expense' " +
+					" ORDER BY " +
+					KEY_ID + " DESC LIMIT 10;";
+			
+			cursor = db.rawQuery(generateList, null);
+			
+			cursor.moveToFirst();
+			if (!cursor.isAfterLast())
+			{
+				do
+				{
+					ArrayList<Object> dataList = new ArrayList<Object>();
+					dataList.add(cursor.getString(0));
+					dataList.add(cursor.getInt(1));
+					records.add(dataList);
+				}
+				while (cursor.moveToNext());
+			}
+				cursor.close();
+			}
+			catch (SQLException e) 
+			{
+				Log.e("DB ERROR", e.toString());
+				e.printStackTrace();
+			}
+		return records;
+	}
     
 }

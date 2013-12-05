@@ -36,11 +36,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	
 	private static final String AKS = "AKS";
 	private final int EXPECTED_RESULT = 1;
-	Context context;
+	static Context context;
 	
 	Summation sumLeft;
 	Summation sumRight;
-	Wallet wallet;
 	
 	ListItemsAdapter leftDrawerAdapter;
 	ListItemsAdapter rightDrawerAdapter;
@@ -70,7 +69,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		context = this;
 		sumLeft = new Summation(context, "iou");
 		sumRight = new Summation(context, "expense");
-		wallet = new Wallet(context);
 		
 		leftTabs.clear();
 		rightTabs.clear();
@@ -200,33 +198,121 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         }
     }
 	
+	static class ViewHolder {
+		ListView recent_records;
+	}
+	
 	public static class WalletFragment extends Fragment {
 
+		Wallet wallet;
+		ArrayList<ArrayList<Object>> recentRecords = new ArrayList<ArrayList<Object>>();
+		ListItemsAdapter adapter;
+        ListView listView;
+        View rootView;
+        ViewHolder holder;
+        
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.wallet_fragment, container, false);
-            return rootView;
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        	setTableData();
+        	rootView = inflater.inflate(R.layout.wallet_fragment, container, false);
+        	
+        	holder.recent_records = (ListView) rootView.findViewById(R.id.recent_records);
+			holder.recent_records.setAdapter(adapter);
+    		rootView.setTag(holder);
+    		return rootView;
+        }
+        
+        public void setTableData() {
+        	holder = new ViewHolder();
+        	wallet = new Wallet(context);
+        	recentRecords = wallet.loadLastTen();
+            adapter = new ListItemsAdapter(context, recentRecords);
+        }
+        
+        @Override
+        public void onStop () {
+        	try{
+        		wallet.closeDB();
+        	} catch(Exception exception) {
+        		Log.i(AKS, "SQL exception");
+        	}
+        	super.onStop();
         }
     }
 	
 	public static class IOUFragment extends Fragment {
 
+		Wallet wallet;
+		ArrayList<ArrayList<Object>> recentRecords = new ArrayList<ArrayList<Object>>();
+		ListItemsAdapter adapter;
+        ListView listView;
+        View rootView;
+        ViewHolder holder;
+        
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.iou_fragment, container, false);
-            return rootView;
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        	setTableData();
+        	rootView = inflater.inflate(R.layout.iou_fragment, container, false);
+        	
+        	holder.recent_records = (ListView) rootView.findViewById(R.id.recent_records);
+			holder.recent_records.setAdapter(adapter);
+    		rootView.setTag(holder);
+    		return rootView;
+        }
+        
+        public void setTableData() {
+        	holder = new ViewHolder();
+        	wallet = new Wallet(context);
+        	recentRecords = wallet.loadLastTenIOUs();
+            adapter = new ListItemsAdapter(context, recentRecords);
+        }
+        
+        @Override
+        public void onStop () {
+        	try{
+        		wallet.closeDB();
+        	} catch(Exception exception) {
+        		Log.i(AKS, "SQL exception");
+        	}
+        	super.onStop();
         }
     }
 	
 	public static class ExpenseFragment extends Fragment {
 
+		Wallet wallet;
+		ArrayList<ArrayList<Object>> recentRecords = new ArrayList<ArrayList<Object>>();
+		ListItemsAdapter adapter;
+        ListView listView;
+        View rootView;
+        ViewHolder holder;
+        
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.expense_fragment, container, false);
-            return rootView;
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        	setTableData();
+        	rootView = inflater.inflate(R.layout.expense_fragment, container, false);
+        	
+        	holder.recent_records = (ListView) rootView.findViewById(R.id.recent_records);
+			holder.recent_records.setAdapter(adapter);
+    		rootView.setTag(holder);
+    		return rootView;
+        }
+        
+        public void setTableData() {
+        	holder = new ViewHolder();
+        	wallet = new Wallet(context);
+        	recentRecords = wallet.loadLastTenEXPs();
+            adapter = new ListItemsAdapter(context, recentRecords);
+        }
+        
+        @Override
+        public void onStop () {
+        	try{
+        		wallet.closeDB();
+        	} catch(Exception exception) {
+        		Log.i(AKS, "SQL exception");
+        	}
+        	super.onStop();
         }
     }
 	
@@ -304,10 +390,14 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 				.setPositiveButton("Add",new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog,int id) {
 						String tableName = name.getText().toString();
-						Ledger ledger = new Ledger(context, tableName, "expense");
-						ledger.closeDB();
-						sumRight.addRow(tableName);
-						reloadRightList();
+						if(tableName.contains(" ") | tableName.length()==0 | !tableName.matches("[a-zA-Z0-9]*")) {
+							showTableNameAlert();
+						} else {
+							Ledger ledger = new Ledger(context, tableName, "expense");
+							ledger.closeDB();
+							sumRight.addRow(tableName);
+							reloadRightList();
+						}
 					}
 				})
 				.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
@@ -332,10 +422,14 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 				.setPositiveButton("Add",new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog,int id) {
 						String tableName = name.getText().toString();
-						Ledger ledger = new Ledger(context, tableName, "iou");
-						ledger.closeDB();
-						sumLeft.addRow(tableName);
-						reloadLeftList();
+						if(tableName.contains(" ") | tableName.length()==0 | !tableName.matches("[a-zA-Z0-9]*")) {
+							showTableNameAlert();
+						} else {
+							Ledger ledger = new Ledger(context, tableName, "iou");
+							ledger.closeDB();
+							sumLeft.addRow(tableName);
+							reloadLeftList();
+						}
 					}
 				})
 				.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
@@ -349,7 +443,22 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		return true;
     }
     
-    @Override
+    protected void showTableNameAlert() {
+		// TODO Auto-generated method stub
+    	AlertDialog.Builder builder = new AlertDialog.Builder(context);
+    	builder.setTitle("enter a valid tab name");
+		builder.setMessage("tab's name cannot be empty, contain spaces or special characters")
+		       .setCancelable(false)
+		       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		                //do things
+		           }
+		       });
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK && requestCode == EXPECTED_RESULT) {
 			reloadRightList();
@@ -361,7 +470,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     public void finish() {
     	sumLeft.closeDB();
     	sumRight.closeDB();
-    	wallet.closeDB();
     	super.finish();
     }
 

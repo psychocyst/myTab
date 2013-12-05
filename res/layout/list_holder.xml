@@ -1,44 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
-    
-    <TableRow
-        android:id="@+id/list_item_row"
-        android:layout_width="match_parent"
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/list_item_row"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_alignParentLeft="true"
+	android:layout_alignParentTop="true"
+	android:layout_margin="4dip"
+	android:weightSum="1.0"
+	android:gravity="center" >
+
+    <TextView
+        android:id="@+id/list_item_name"
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="0.6"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:gravity="left"
+        android:paddingLeft="16dip"
+	    android:paddingRight="8dip"
+	    android:textColor="#000000"
+	    android:background="?android:attr/activatedBackgroundIndicator"
+	    android:minHeight="?android:attr/listPreferredItemHeightSmall" />
+
+    <TextView
+        android:id="@+id/list_item_amount"
+        android:layout_width="0dip"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_margin="4dip"
-        android:weightSum="1.0"
-        android:gravity="center" >
-
-	    <TextView
-	        android:id="@+id/list_item_name"
-	        android:layout_width="0dip"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="0.7"
-	        android:gravity="center_vertical"
-	        android:textAppearance="?android:attr/textAppearanceSmall"
-	        android:paddingLeft="16dp"
-		    android:paddingRight="16dp"
-		    android:textColor="#000000"
-		    android:background="?android:attr/activatedBackgroundIndicator"
-		    android:minHeight="?android:attr/listPreferredItemHeightSmall" />
-
-	    <TextView
-	        android:id="@+id/list_item_amount"
-	        android:layout_width="0dip"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="0.3"
-	        android:gravity="center"
-	        android:textAppearance="?android:attr/textAppearanceSmall"
-	        android:paddingLeft="16dp"
-	 		android:paddingRight="16dp"
-	 	   	android:textColor="#000000"
-	 	   	android:background="?android:attr/activatedBackgroundIndicator"
- 		   	android:minHeight="?android:attr/listPreferredItemHeightSmall" />
+        android:layout_weight="0.4"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:gravity="right"
+        android:paddingLeft="8dip"
+ 		android:paddingRight="16dip"
+ 	   	android:textColor="#000000"
+ 	   	android:background="?android:attr/activatedBackgroundIndicator"
+	   	android:minHeight="?android:attr/listPreferredItemHeightSmall" />
 	
-	</TableRow>
-	    
-</RelativeLayout>
+</TableRow>

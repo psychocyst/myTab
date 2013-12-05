@@ -33,6 +33,7 @@ public class CollectionsActivity extends FragmentActivity implements OnClickList
     private static Context context;
     
 	String noteToAdd = "softcoded";
+	String amountToAddText = "amount";
 	Integer amountToAdd = 13;
 	EditText editTextAmount;
 	EditText editTextNote;
@@ -67,35 +68,73 @@ public class CollectionsActivity extends FragmentActivity implements OnClickList
 	@Override
 	public void onClick(View view) {
 		if(view.getId() == R.id.add_record) {
-			try {
-				amountToAdd = Integer.parseInt(editTextAmount.getText().toString());
-		        noteToAdd = editTextNote.getText().toString();
-		        if(noteToAdd.length()==0)
-		        	noteToAdd = "misc";
-		        ObjectFragment frag = (ObjectFragment) collectionPagerAdapter.getItem(viewPager.getCurrentItem());
-				frag.setTableData();
-				frag.insertInto(amountToAdd, noteToAdd);
-				frag.updateView();
-				editTextAmount.setText(null);
-				editTextNote.setText(null);
-			} catch(Exception exception) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setMessage("Enter a valid amount")
-				       .setCancelable(false)
-				       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-				           public void onClick(DialogInterface dialog, int id) {
-				                //do things
-				           }
-				       });
-				AlertDialog alert = builder.create();
-				alert.show();
-			}
+			checkAmount();
 		} else if(view.getId() == R.id.reset_input) {
 			editTextAmount.setText(null);
 			editTextNote.setText(null);
 		}
 	}
+
+	private void checkAmount() {
+		amountToAddText = editTextAmount.getText().toString();
+		if(amountToAddText.length()==0 | amountToAddText.length()>7)
+			showAlertAmount();
+		else if(amountToAddText.contentEquals("-"))
+			showAlertAmount();
+		else {
+			amountToAdd = Integer.parseInt(amountToAddText);
+			checkNote();
+		}
+	}
 	
+	private void checkNote() {
+		noteToAdd = editTextNote.getText().toString();
+        if(noteToAdd.length()==0) {
+        	noteToAdd = "misc";
+        	runTransaction();
+        }
+        else if(noteToAdd.matches("[a-zA-Z0-9 ]*") && noteToAdd.length()<17)
+        	runTransaction();
+        else
+        	showNoteAlertName();
+	}
+	
+	private void runTransaction() {
+		ObjectFragment frag = (ObjectFragment) collectionPagerAdapter.getItem(viewPager.getCurrentItem());
+		frag.setTableData();
+		frag.insertInto(amountToAdd, noteToAdd);
+		frag.updateView();
+		editTextAmount.setText(null);
+		editTextNote.setText(null);
+	}
+	
+	private void showAlertAmount() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Enter a valid amount")
+		       .setCancelable(false)
+		       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		                //do things
+		           }
+		       });
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+	private void showNoteAlertName() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+    	builder.setTitle("enter a valid note");
+		builder.setMessage("notes may not contain special characters or be greater than 16 characters")
+		       .setCancelable(false)
+		       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		                //do things
+		           }
+		       });
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 //		getMenuInflater().inflate(R.menu.main, menu);
@@ -208,6 +247,7 @@ public class CollectionsActivity extends FragmentActivity implements OnClickList
         
         public void insertInto(Integer amount, String note) {
 			ledger.addRecord(amount, note);
+			Log.i(AKS, ""+amount+" "+note);
 			reloadRecentRecords();
 		}
         
