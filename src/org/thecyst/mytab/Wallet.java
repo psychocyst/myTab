@@ -199,5 +199,64 @@ public class Wallet {
 			}
 		return records;
 	}
+
+	public String calcTotalWallet() {
+    	Cursor cursor;
+    	String total = "0";
+    	try {
+    		String getTotal = "SELECT SUM( " + KEY_AMOUNT + 
+    			" ) FROM " + TABLE_NAME + ";";
+		
+    		cursor = db.rawQuery(getTotal, null);
+    		cursor.moveToFirst();
+    		total = cursor.getString(0);
+    		cursor.close();
+    	}
+		catch (SQLException e) {
+			Log.e("DB ERROR", e.toString());
+			e.printStackTrace();
+		}
+		return total;
+    }
+	
+	public String calcTotalIOU() {
+    	Cursor cursor;
+    	String total = "0";
+    	try {
+    		String getTotal = "SELECT SUM( " + KEY_AMOUNT + 
+    			" ) FROM " + TABLE_NAME +
+    			" WHERE " + KEY_TYPE + " = 'iou' " + ";";
+		
+    		cursor = db.rawQuery(getTotal, null);
+    		cursor.moveToFirst();
+    		total = cursor.getString(0);
+    		cursor.close();
+    	}
+		catch (SQLException e) {
+			Log.e("DB ERROR", e.toString());
+			e.printStackTrace();
+		}
+		return total;
+    }
+	
+	public String calcTotalExpense() {
+    	Cursor cursor;
+    	String total = "0";
+    	try {
+    		String getTotal = "SELECT SUM( " + KEY_AMOUNT + 
+    			" ) FROM " + TABLE_NAME +
+    			" WHERE " + KEY_TYPE + " = 'expense' " +";";
+		
+    		cursor = db.rawQuery(getTotal, null);
+    		cursor.moveToFirst();
+    		total = cursor.getString(0);
+    		cursor.close();
+    	}
+		catch (SQLException e) {
+			Log.e("DB ERROR", e.toString());
+			e.printStackTrace();
+		}
+		return total;
+    }
     
 }

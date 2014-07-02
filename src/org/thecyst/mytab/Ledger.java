@@ -91,7 +91,7 @@ public class Ledger {
 						KEY_AMOUNT + ", " + KEY_NAME + ", " +
 						KEY_NOTE + ", " + KEY_TIME + ", " + KEY_TYPE + " ) " +
 						"SELECT " + KEY_AMOUNT + ", '" +
-						KEY_NAME + "', " + KEY_NOTE + ", " +
+						TABLE_NAME + "', " + KEY_NOTE + ", " +
 						KEY_TIME + ", '" +
 						TABLE_TYPE + "' " + " FROM " + TABLE_NAME + 
 						" ORDER BY " + KEY_ID + 

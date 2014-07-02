@@ -33,32 +33,43 @@ public final class R {
         public static final int schedule=0x7f020009;
     }
     public static final class id {
-        public static final int Add=0x7f080015;
-        public static final int Add_Exp=0x7f080017;
-        public static final int Add_Tab=0x7f080016;
-        public static final int Calender=0x7f080019;
-        public static final int Schedule_Task=0x7f080018;
-        public static final int action_settings=0x7f080014;
-        public static final int add_record=0x7f080008;
+        public static final int Add=0x7f08001e;
+        public static final int Add_Exp=0x7f080020;
+        public static final int Add_Tab=0x7f08001f;
+        public static final int Calender=0x7f080022;
+        public static final int Schedule_Task=0x7f080021;
+        public static final int action_close=0x7f080023;
+        public static final int action_delete=0x7f080024;
+        public static final int action_settings=0x7f08001d;
+        public static final int add_record=0x7f08000b;
         public static final int drawer_layout=0x7f080000;
-        public static final int editTextAmount=0x7f08000e;
-        public static final int editTextNote=0x7f08000c;
+        public static final int editTextAmount=0x7f080011;
+        public static final int editTextNote=0x7f08000f;
         public static final int left_drawer=0x7f080002;
-        public static final int list_item_amount=0x7f080013;
-        public static final int list_item_name=0x7f080012;
-        public static final int list_item_row=0x7f080011;
+        public static final int list_item_amount=0x7f080019;
+        public static final int list_item_name=0x7f080018;
+        public static final int list_item_row=0x7f080017;
         public static final int pager=0x7f080001;
-        public static final int pager_title_strip=0x7f080006;
+        public static final int pager_title_strip=0x7f080009;
         public static final int recent_records=0x7f080004;
-        public static final int record_name=0x7f08000f;
-        public static final int record_sum=0x7f080010;
-        public static final int reset_input=0x7f080009;
+        public static final int record_name=0x7f080012;
+        public static final int record_name_exp=0x7f080006;
+        public static final int record_name_iou=0x7f080015;
+        public static final int record_name_wallet=0x7f08001b;
+        public static final int record_sum=0x7f080013;
+        public static final int record_sum_exp=0x7f080007;
+        public static final int record_sum_iou=0x7f080016;
+        public static final int record_sum_wallet=0x7f08001c;
+        public static final int reset_input=0x7f08000c;
         public static final int right_drawer=0x7f080003;
-        public static final int tableRow1=0x7f080007;
-        public static final int tableRow2=0x7f08000a;
-        public static final int tableRow3=0x7f080005;
-        public static final int textView1=0x7f08000b;
-        public static final int textView2=0x7f08000d;
+        public static final int tableRow1=0x7f08000a;
+        public static final int tableRow2=0x7f08000d;
+        public static final int tableRow3=0x7f080008;
+        public static final int tableRowExpense=0x7f080005;
+        public static final int tableRowIOU=0x7f080014;
+        public static final int tableRowWallet=0x7f08001a;
+        public static final int textView1=0x7f08000e;
+        public static final int textView2=0x7f080010;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -71,6 +82,7 @@ public final class R {
     }
     public static final class menu {
         public static final int main=0x7f070000;
+        public static final int menu_collections_activity=0x7f070001;
     }
     public static final class string {
         public static final int action_settings=0x7f050001;

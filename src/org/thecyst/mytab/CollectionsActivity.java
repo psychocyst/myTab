@@ -16,6 +16,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.view.ViewPager;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,9 +25,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemLongClickListener;
 
 public class CollectionsActivity extends FragmentActivity implements OnClickListener {
 
@@ -52,6 +56,8 @@ public class CollectionsActivity extends FragmentActivity implements OnClickList
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         
+
+        actionBar.setTitle(bundle.getString("type"));
         collectionPagerAdapter = new CollectionPagerAdapter(getSupportFragmentManager(), bundle.getString("type"));
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(collectionPagerAdapter);
@@ -134,10 +140,23 @@ public class CollectionsActivity extends FragmentActivity implements OnClickList
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
+	
+	@Override
+	public void onBackPressed() {
+		Intent upIntent = new Intent(this, MainActivity.class);
+        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+            TaskStackBuilder.from(this)
+                    .addNextIntent(upIntent)
+                    .startActivities();
+            finish();
+        } else {
+            NavUtils.navigateUpTo(this, upIntent);
+        }
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-//		getMenuInflater().inflate(R.menu.main, menu);
+		getMenuInflater().inflate(R.menu.menu_collections_activity, menu);
 		return true;
 	}
 	
@@ -155,6 +174,44 @@ public class CollectionsActivity extends FragmentActivity implements OnClickList
                     NavUtils.navigateUpTo(this, upIntent);
                 }
                 return true;
+            case R.id.action_close:
+        		AlertDialog.Builder alertDialogBuilderClose = new AlertDialog.Builder(context);
+    			alertDialogBuilderClose.setTitle("Close Record?");
+    			alertDialogBuilderClose.setMessage("you will be unable to make any further changes");
+    			alertDialogBuilderClose.setCancelable(false)
+    				.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+    					public void onClick(DialogInterface dialog,int id) {
+    						//TODO
+    						
+    					}
+    				})
+    				.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+    					public void onClick(DialogInterface dialog,int id) {
+    						dialog.cancel();
+    					}
+    				});
+    			AlertDialog alertDialogClose = alertDialogBuilderClose.create();
+    			alertDialogClose.show();
+            	return true;
+            case R.id.action_delete:
+        		AlertDialog.Builder alertDialogBuilderDelete = new AlertDialog.Builder(context);
+        		alertDialogBuilderDelete.setTitle("Close Record?");
+        		alertDialogBuilderDelete.setMessage("you will be unable to make any further changes");
+        		alertDialogBuilderDelete.setCancelable(false)
+    				.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+    					public void onClick(DialogInterface dialog,int id) {
+    						//TODO
+    						
+    					}
+    				})
+    				.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+    					public void onClick(DialogInterface dialog,int id) {
+    						dialog.cancel();
+    					}
+    				});
+    			AlertDialog alertDialogDelete = alertDialogBuilderDelete.create();
+    			alertDialogDelete.show();
+            	return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -185,7 +242,8 @@ public class CollectionsActivity extends FragmentActivity implements OnClickList
     	
 		@Override
         public String getPageTitle(int position) {
-            return drawerAdapter.getItemName(position);
+//TODO   
+			return drawerAdapter.getItemName(position).replaceFirst("[a-zA-Z0-9]*_", "");
         }
 
 		@Override
@@ -224,10 +282,48 @@ public class CollectionsActivity extends FragmentActivity implements OnClickList
         	holder.record_name = (TextView) rootView.findViewById(R.id.record_name);
 			holder.record_sum = (TextView) rootView.findViewById(R.id.record_sum);
 			holder.recent_records = (ListView) rootView.findViewById(R.id.recent_records);
-			
-    		holder.record_name.setText(tableName);
+//TODO			
+    		holder.record_name.setText(tableName.replaceFirst("[a-zA-Z0-9]*_", ""));
     		holder.record_sum.setText(amount.toString());
     		holder.recent_records.setAdapter(adapter);
+    		
+    		holder.recent_records.setOnItemLongClickListener(
+    				new OnItemLongClickListener() {
+
+    					@Override
+    					public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
+    							long arg3) {
+    						AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+    						alertDialogBuilder.setTitle("Edit Record Data");
+    						alertDialogBuilder.setMessage("Record Note");
+    						final EditText note = new EditText(context);
+    						InputFilter[] FilterArray = new InputFilter[1];
+    						FilterArray[0] = new InputFilter.LengthFilter(16);
+    						note.setFilters(FilterArray);
+    						note.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_NORMAL);
+    						alertDialogBuilder.setView(note);
+    						alertDialogBuilder.setCancelable(false)
+    							.setPositiveButton("Update",new DialogInterface.OnClickListener() {
+    								public void onClick(DialogInterface dialog,int id) {
+    									String noteText = note.getText().toString();
+    									if(noteText.contains(" ") | noteText.length()==0 | !noteText.matches("[a-zA-Z0-9]*")) {
+    										Log.i(AKS, "crap");
+    									} else {
+    										Log.i(AKS, "no crap "+noteText);
+    									}
+    								}
+    							})
+    							.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+    								public void onClick(DialogInterface dialog,int id) {
+    									dialog.cancel();
+    								}
+    							});
+    						AlertDialog alertDialog = alertDialogBuilder.create();
+    						alertDialog.show();  
+    						return false;
+    					}
+    					
+    				});
     		rootView.setTag(holder);
     		views.put(position, rootView);
         	return rootView;
@@ -237,6 +333,7 @@ public class CollectionsActivity extends FragmentActivity implements OnClickList
         	holder = new ViewHolder();
         	Bundle args = getArguments();
         	position = args.getInt("position");
+//        	tableName = args.getString("itemName").replaceFirst("[a-zA-Z0-9]*_", "");
         	tableName = args.getString("itemName");
         	tableType = args.getString("type");
         	ledger = new Ledger(context, tableName, tableType);
@@ -262,7 +359,8 @@ public class CollectionsActivity extends FragmentActivity implements OnClickList
         public void updateView() {
         	rootView = (View) views.get(position);
         	holder = (ViewHolder) rootView.getTag();
-        	holder.record_name.setText(tableName);
+//TODO
+        	holder.record_name.setText(tableName.replaceFirst("[a-zA-Z0-9]*_", ""));
     		holder.record_sum.setText(amount.toString());
     		holder.recent_records.setAdapter(adapter);
     		rootView.requestFocus();

@@ -7,8 +7,45 @@
         android:id="@+id/recent_records"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/tableRowIOU"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true" >
+
     </ListView>
+    
+    <TableRow
+        android:id="@+id/tableRowIOU"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true" >
+
+        <TextView
+            android:id="@+id/record_name_iou"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.6"
+            android:background="?android:attr/activatedBackgroundIndicator"
+            android:gravity="left"
+            android:minHeight="?android:attr/listPreferredItemHeightSmall"
+            android:paddingLeft="16dip"
+            android:paddingRight="8dip"
+            android:text="TOTAL"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#000" />
+
+        <TextView
+            android:id="@+id/record_sum_iou"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.4"
+            android:background="?android:attr/activatedBackgroundIndicator"
+            android:gravity="right"
+            android:minHeight="?android:attr/listPreferredItemHeightSmall"
+            android:paddingLeft="8dip"
+            android:paddingRight="16dip"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#000" />
+    </TableRow>
 
 </RelativeLayout>

@@ -24,6 +24,7 @@ public class ListItemsAdapter extends BaseAdapter {
 	
 	public String getItemName(int position) {
 		// TODO Auto-generated method stub
+//		return list.get(position).get(0).toString().replaceFirst("[a-zA-Z0-9]*_", "");
 		return list.get(position).get(0).toString();
 	}
 
@@ -57,8 +58,9 @@ public class ListItemsAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		
-		holder.note.setText(list.get(position).get(0).toString());
+//TODO		
+		holder.note.setText(list.get(position).get(0).toString().replaceFirst("[a-zA-Z0-9]*_", ""));
+//		holder.note.setText(list.get(position).get(0).toString());
 		holder.amount.setText(list.get(position).get(1).toString());
 		
 		textColor = getTextColor((Integer) list.get(position).get(1));

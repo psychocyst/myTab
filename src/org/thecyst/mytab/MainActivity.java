@@ -31,6 +31,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 	
@@ -200,14 +201,17 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	
 	static class ViewHolder {
 		ListView recent_records;
+		TextView total;
 	}
 	
 	public static class WalletFragment extends Fragment {
 
 		Wallet wallet;
 		ArrayList<ArrayList<Object>> recentRecords = new ArrayList<ArrayList<Object>>();
+		String total = "0";
 		ListItemsAdapter adapter;
         ListView listView;
+        TextView textView;
         View rootView;
         ViewHolder holder;
         
@@ -215,9 +219,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         	setTableData();
         	rootView = inflater.inflate(R.layout.wallet_fragment, container, false);
-        	
+        	holder.total = (TextView) rootView.findViewById(R.id.record_sum_wallet);
         	holder.recent_records = (ListView) rootView.findViewById(R.id.recent_records);
 			holder.recent_records.setAdapter(adapter);
+			holder.total.setText(total);
     		rootView.setTag(holder);
     		return rootView;
         }
@@ -226,6 +231,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         	holder = new ViewHolder();
         	wallet = new Wallet(context);
         	recentRecords = wallet.loadLastTen();
+        	total = wallet.calcTotalWallet();
             adapter = new ListItemsAdapter(context, recentRecords);
         }
         
@@ -244,8 +250,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 		Wallet wallet;
 		ArrayList<ArrayList<Object>> recentRecords = new ArrayList<ArrayList<Object>>();
+		String total = "0";
 		ListItemsAdapter adapter;
         ListView listView;
+        TextView textView;
         View rootView;
         ViewHolder holder;
         
@@ -253,9 +261,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         	setTableData();
         	rootView = inflater.inflate(R.layout.iou_fragment, container, false);
-        	
+        	holder.total = (TextView) rootView.findViewById(R.id.record_sum_iou);
         	holder.recent_records = (ListView) rootView.findViewById(R.id.recent_records);
 			holder.recent_records.setAdapter(adapter);
+			holder.total.setText(total);
     		rootView.setTag(holder);
     		return rootView;
         }
@@ -264,6 +273,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         	holder = new ViewHolder();
         	wallet = new Wallet(context);
         	recentRecords = wallet.loadLastTenIOUs();
+        	total = wallet.calcTotalIOU();
             adapter = new ListItemsAdapter(context, recentRecords);
         }
         
@@ -282,8 +292,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 		Wallet wallet;
 		ArrayList<ArrayList<Object>> recentRecords = new ArrayList<ArrayList<Object>>();
+		String total = "0";
 		ListItemsAdapter adapter;
         ListView listView;
+        TextView textView;
         View rootView;
         ViewHolder holder;
         
@@ -291,9 +303,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         	setTableData();
         	rootView = inflater.inflate(R.layout.expense_fragment, container, false);
-        	
+        	holder.total = (TextView) rootView.findViewById(R.id.record_sum_exp);
         	holder.recent_records = (ListView) rootView.findViewById(R.id.recent_records);
 			holder.recent_records.setAdapter(adapter);
+			holder.total.setText(total);
     		rootView.setTag(holder);
     		return rootView;
         }
@@ -302,6 +315,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         	holder = new ViewHolder();
         	wallet = new Wallet(context);
         	recentRecords = wallet.loadLastTenEXPs();
+        	total = wallet.calcTotalExpense();
             adapter = new ListItemsAdapter(context, recentRecords);
         }
         
@@ -393,6 +407,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 						if(tableName.contains(" ") | tableName.length()==0 | !tableName.matches("[a-zA-Z0-9]*")) {
 							showTableNameAlert();
 						} else {
+							tableName = "expense_"+tableName;
 							Ledger ledger = new Ledger(context, tableName, "expense");
 							ledger.closeDB();
 							sumRight.addRow(tableName);
@@ -425,6 +440,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 						if(tableName.contains(" ") | tableName.length()==0 | !tableName.matches("[a-zA-Z0-9]*")) {
 							showTableNameAlert();
 						} else {
+							tableName = "iou_"+tableName;
 							Ledger ledger = new Ledger(context, tableName, "iou");
 							ledger.closeDB();
 							sumLeft.addRow(tableName);
